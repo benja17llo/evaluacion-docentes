@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación de Desempeño de Estudiantes</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Arial,sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh;}
+  .wrap{max-width:700px;margin:0 auto;padding:2rem 1rem;}
+  .header{text-align:center;margin-bottom:2rem;padding:1.5rem;background:#fff;border-radius:12px;border:1px solid #e0e0e0;}
+  .header h1{font-size:20px;font-weight:600;color:#185FA5;margin-bottom:6px;}
+  .header p{font-size:13px;color:#666;line-height:1.6;}
+  .card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;}
+  .section-title{font-size:15px;font-weight:600;color:#185FA5;margin-bottom:4px;padding-bottom:8px;border-bottom:1px solid #eee;}
+  .section-hint{font-size:12px;color:#888;margin-bottom:1rem;margin-top:4px;}
+  .field-group{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;}
+  label.field-label{font-size:13px;color:#555;display:block;margin-bottom:4px;}
+  input[type=text],select,textarea{width:100%;padding:9px 11px;border:1px solid #ccc;border-radius:8px;font-size:14px;color:#1a1a1a;background:#fff;font-family:Arial,sans-serif;}
+  input[type=text]:focus,select:focus,textarea:focus{outline:2px solid #185FA5;border-color:#185FA5;}
+  textarea{min-height:80px;resize:vertical;}
+  .q-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;}
+  .q-row:last-child{border-bottom:none;}
+  .q-num{font-size:12px;color:#999;min-width:18px;}
+  .q-text{font-size:13px;color:#1a1a1a;flex:1;line-height:1.4;}
+  .opts{display:flex;gap:6px;flex-shrink:0;}
+  .opt-lbl{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+  .opt-lbl span{font-size:11px;color:#666;}
+  input[type=radio]{width:18px;height:18px;accent-color:#185FA5;cursor:pointer;}
+  .btn-submit{width:100%;padding:13px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px;}
+  .btn-submit:hover{background:#0C447C;}
+  .btn-submit:disabled{background:#aaa;cursor:not-allowed;}
+  .success-box{display:none;text-align:center;padding:2.5rem;background:#fff;border-radius:12px;border:1px solid #c0dda0;}
+  .success-box h2{color:#3B6D11;font-size:20px;margin-bottom:8px;}
+  .success-box p{color:#555;font-size:14px;line-height:1.6;}
+  .error-msg{color:#A32D2D;font-size:13px;margin-top:8px;display:none;padding:8px 12px;background:#FCEBEB;border-radius:6px;}
+  @media(max-width:500px){.field-group{grid-template-columns:1fr;}.opts{gap:4px;}.opt-lbl span{font-size:10px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="form-wrap">
+    <div class="header">
+      <h1>Evaluación de Desempeño de Estudiantes</h1>
+      <p>Asociación Nebajense para el Desarrollo Educativo — Comisión de Educación<br>
+      Elija solo una opción por pregunta marcando la respuesta correspondiente.</p>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Datos del docente</div>
+      <div style="height:12px;"></div>
+      <div class="field-group">
+        <div>
+          <label class="field-label">Nombre completo del docente</label>
+          <input type="text" id="nombre" placeholder="Escriba su nombre completo">
+        </div>
+        <div>
+          <label class="field-label">Grado / sección a cargo</label>
+          <select id="grado">
+            <option value="">— Seleccione su grado —</option>
+            <option>4o. PC</option>
+            <option>5o. PC</option>
+            <option>6o. PC</option>
+            <option>4o. Infantil</option>
+            <option>5o. Infantil</option>
+            <option>6o. Infantil</option>
+            <option>4o. Bach. Computación</option>
+            <option>5o. Bach. Computación</option>
+            <option>5o. Bach. Educación</option>
+            <option>4o. Bach. Medicina</option>
+            <option>5o. Bach. Medicina</option>
+            <option>5o. Bach. CC. Jurídicas</option>
+            <option>5o. Bach. Administración</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Sección 1 — Rendimiento y comportamiento de alumnos</div>
+      <div class="section-hint">Opciones: Mucho / Poco / Nada</div>
+      <div id="s1-container"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Sección 2 — Evaluación del personal administrativo</div>
+      <div class="section-hint">Opciones: Siempre / A veces / Nunca</div>
+      <div id="s2-container"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Sección 3 — Comentarios adicionales</div>
+      <div style="height:10px;"></div>
+      <label class="field-label">Observaciones o sugerencias (opcional)</label>
+      <textarea id="comentarios" placeholder="Si desea agregar algo más, incluyendo sugerencias..."></textarea>
+      <div style="height:12px;"></div>
+      <label class="field-label">¿En qué área cree que se debería apoyar con capacitación?</label>
+      <textarea id="capacitacion" placeholder="Escriba el área de capacitación sugerida..."></textarea>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+    <button class="btn-submit" id="btn-enviar" onclick="enviarFormulario()">Enviar evaluación</button>
+  </div>
+
+  <div class="success-box" id="success-box">
+    <div style="font-size:48px;margin-bottom:12px;">✅</div>
+    <h2>¡Evaluación enviada con éxito!</h2>
+    <p>Gracias por completar la evaluación.<br>Sus respuestas han sido registradas correctamente.</p>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://zoehmyaxgayqckwgltuq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_XjmaBsHXNsdGLvy8M-xgog_alLfj_Gb';
+
+const s1Qs = [
+  'Promedio de alumnos con asistencia al 100%',
+  'Promedio de alumnos que cumplen con tareas al 100%',
+  'Sospecha de consumo de alcohol y estupefacientes',
+  'Cumplimiento de normas generales de reglamento dentro del aula',
+  'Promedio de estudiantes que demuestran respeto hacia el docente'
+];
+const s2Qs = [
+  'Dirección toma en cuenta sugerencias del personal',
+  'Sub Dirección resuelve problemas y peticiones del personal',
+  'Secretaria Juana siempre atenta con el personal',
+  'Secretaria Marleny (nueva) siempre atenta con el personal',
+  'Tesorera brinda atención con esmero al personal'
+];
+
+function buildSection(containerId, questions, opts, prefix) {
+  const c = document.getElementById(containerId);
+  questions.forEach((q, i) => {
+    const row = document.createElement('div');
+    row.className = 'q-row';
+    const optHtml = opts.map(o => `<label class="opt-lbl"><input type="radio" name="${prefix}_${i}" value="${o}"><span>${o}</span></label>`).join('');
+    row.innerHTML = `<span class="q-num">${i+1}.</span><span class="q-text">${q}</span><div class="opts">${optHtml}</div>`;
+    c.appendChild(row);
+  });
+}
+
+buildSection('s1-container', s1Qs, ['Mucho','Poco','Nada'], 's1');
+buildSection('s2-container', s2Qs, ['Siempre','A veces','Nunca'], 's2');
+
+function getVal(prefix, i) {
+  const el = document.querySelector(`input[name="${prefix}_${i}"]:checked`);
+  return el ? el.value : null;
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 5000);
+}
+
+async function enviarFormulario() {
+  const nombre = document.getElementById('nombre').value.trim();
+  const grado = document.getElementById('grado').value;
+  if (!nombre) { showError('Por favor ingrese su nombre completo.'); return; }
+  if (!grado) { showError('Por favor seleccione su grado y sección.'); return; }
+  const allAnswered = [...Array(5)].every((_,i) => getVal('s1',i)) && [...Array(5)].every((_,i) => getVal('s2',i));
+  if (!allAnswered) { showError('Por favor responda todas las preguntas antes de enviar.'); return; }
+
+  const btn = document.getElementById('btn-enviar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  const payload = {
+    nombre, grado,
+    s1_q1: getVal('s1',0), s1_q2: getVal('s1',1), s1_q3: getVal('s1',2), s1_q4: getVal('s1',3), s1_q5: getVal('s1',4),
+    s2_q1: getVal('s2',0), s2_q2: getVal('s2',1), s2_q3: getVal('s2',2), s2_q4: getVal('s2',3), s2_q5: getVal('s2',4),
+    comentarios: document.getElementById('comentarios').value.trim(),
+    capacitacion: document.getElementById('capacitacion').value.trim()
+  };
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/respuestas`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Error');
+    document.getElementById('form-wrap').style.display = 'none';
+    document.getElementById('success-box').style.display = 'block';
+  } catch(e) {
+    showError('Ocurrió un error al enviar. Verifique su conexión e intente de nuevo.');
+    btn.disabled = false;
+    btn.textContent = 'Enviar evaluación';
+  }
+}
+</script>
+</body>
+</html>
