@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación de Desempeño — ANDE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul: #1B4F8A;
+  --azul-claro: #2E6FBF;
+  --azul-suave: #EAF2FB;
+  --verde: #2D7A3F;
+  --verde-suave: #E8F5EC;
+  --naranja: #C0580A;
+  --naranja-suave: #FDF0E6;
+  --rojo: #B02A2A;
+  --rojo-suave: #FDEAEA;
+  --gris-bg: #F4F6FA;
+  --gris-card: #FFFFFF;
+  --gris-border: #DDE3EE;
+  --texto: #1A2235;
+  --texto-sec: #5A6580;
+  --texto-ter: #8C95A8;
+  --radio: 14px;
+  --radio-sm: 8px;
+  --sombra: 0 2px 16px rgba(27,79,138,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--gris-bg);color:var(--texto);min-height:100vh;}
+
+/* HERO HEADER */
+.hero{background:linear-gradient(135deg,#1B4F8A 0%,#2E6FBF 60%,#1a8a6b 100%);padding:2.5rem 1rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.hero-inst{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:10px;}
+.hero h1{font-family:'Playfair Display',serif;font-size:28px;color:#fff;line-height:1.25;margin-bottom:8px;}
+.hero p{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;max-width:480px;margin:0 auto;}
+
+/* PROGRESO */
+.progress-wrap{max-width:680px;margin:-1.5rem auto 0;padding:0 1rem;position:relative;z-index:10;}
+.progress-card{background:#fff;border-radius:var(--radio);box-shadow:var(--sombra);padding:1.25rem 1.5rem;border:1px solid var(--gris-border);}
+.progress-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.progress-label{font-size:13px;color:var(--texto-sec);}
+.progress-count{font-size:13px;font-weight:600;color:var(--azul);}
+.progress-bar{height:6px;background:#EAF2FB;border-radius:10px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--azul),var(--azul-claro));border-radius:10px;transition:width 0.5s ease;}
+.secciones-dots{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.sec-dot{height:6px;border-radius:10px;background:#DDE3EE;flex:1;min-width:20px;transition:background 0.3s;}
+.sec-dot.done{background:var(--verde);}
+.sec-dot.active{background:var(--azul-claro);}
+
+/* CONTENIDO */
+.main{max-width:680px;margin:1.5rem auto;padding:0 1rem 3rem;}
+
+/* PANTALLA INICIO */
+.inicio-card{background:var(--gris-card);border-radius:var(--radio);border:1px solid var(--gris-border);box-shadow:var(--sombra);padding:2rem;}
+.inicio-card h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--azul);margin-bottom:6px;}
+.inicio-card p{font-size:13px;color:var(--texto-sec);line-height:1.6;margin-bottom:1.5rem;}
+.field-label{font-size:12px;font-weight:600;color:var(--texto-sec);text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:6px;}
+.input-field{width:100%;padding:11px 14px;border:1.5px solid var(--gris-border);border-radius:var(--radio-sm);font-size:14px;font-family:'DM Sans',sans-serif;color:var(--texto);background:#fff;transition:border-color 0.2s;}
+.input-field:focus{outline:none;border-color:var(--azul-claro);}
+.select-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem;}
+.select-wrap{position:relative;}
+.select-wrap select{width:100%;padding:11px 14px;border:1.5px solid var(--gris-border);border-radius:var(--radio-sm);font-size:14px;font-family:'DM Sans',sans-serif;color:var(--texto);background:#fff;appearance:none;cursor:pointer;transition:border-color 0.2s;}
+.select-wrap select:focus{outline:none;border-color:var(--azul-claro);}
+.select-wrap::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--texto-ter);pointer-events:none;font-size:14px;}
+
+/* SECCIONES PENDIENTES */
+.secciones-list{margin-top:1.25rem;}
+.secciones-title{font-size:12px;font-weight:600;color:var(--texto-sec);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;}
+.sec-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radio-sm);background:var(--azul-suave);border:1px solid #C8DEFA;margin-bottom:6px;}
+.sec-item.done{background:var(--verde-suave);border-color:#B2DDB9;}
+.sec-item-icon{width:28px;height:28px;border-radius:50%;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
+.sec-item.done .sec-item-icon{background:var(--verde);}
+.sec-item-text{font-size:13px;font-weight:500;color:var(--texto);flex:1;}
+.sec-item-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:5px;background:#C8DEFA;color:var(--azul);}
+.sec-item.done .sec-item-badge{background:#B2DDB9;color:var(--verde);}
+
+/* FORMULARIO EVALUACION */
+.eval-card{background:var(--gris-card);border-radius:var(--radio);border:1px solid var(--gris-border);box-shadow:var(--sombra);margin-bottom:1.25rem;overflow:hidden;}
+.eval-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--gris-border);background:var(--azul-suave);}
+.eval-header h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--azul);margin-bottom:3px;}
+.eval-header p{font-size:12px;color:var(--texto-sec);}
+.eval-body{padding:1.25rem 1.5rem;}
+.q-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--gris-border);}
+.q-row:last-child{border-bottom:none;}
+.q-num{font-size:11px;font-weight:700;color:var(--azul-claro);min-width:20px;background:var(--azul-suave);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.q-text{font-size:13px;color:var(--texto);flex:1;line-height:1.4;}
+.opts{display:flex;gap:4px;flex-shrink:0;}
+.opt-btn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 6px;border-radius:6px;transition:background 0.15s;}
+.opt-btn:hover{background:var(--azul-suave);}
+.opt-btn input[type=radio]{display:none;}
+.opt-btn .circle{width:20px;height:20px;border-radius:50%;border:2px solid var(--gris-border);background:#fff;transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
+.opt-btn input:checked + .circle{border-color:var(--azul);background:var(--azul);}
+.opt-btn input:checked + .circle::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%;}
+.opt-btn .opt-label{font-size:10px;font-weight:600;color:var(--texto-ter);text-align:center;line-height:1.2;}
+.opt-btn input:checked ~ .opt-label{color:var(--azul);}
+.comentarios-card{background:var(--gris-card);border-radius:var(--radio);border:1px solid var(--gris-border);box-shadow:var(--sombra);margin-bottom:1.25rem;overflow:hidden;}
+.com-header{padding:1rem 1.5rem;background:#F8F7FF;border-bottom:1px solid var(--gris-border);}
+.com-header h3{font-size:14px;font-weight:600;color:#4A3F8C;}
+.com-body{padding:1.25rem 1.5rem;}
+textarea.input-field{min-height:75px;resize:vertical;}
+
+/* BOTONES */
+.btn{width:100%;padding:13px;border:none;border-radius:var(--radio-sm);font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;margin-bottom:8px;}
+.btn-primary{background:linear-gradient(135deg,var(--azul),var(--azul-claro));color:#fff;box-shadow:0 4px 14px rgba(27,79,138,0.3);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(27,79,138,0.4);}
+.btn-primary:disabled{background:#aaa;box-shadow:none;transform:none;cursor:not-allowed;}
+.btn-success{background:linear-gradient(135deg,#2D7A3F,#3A9E52);color:#fff;box-shadow:0 4px 14px rgba(45,122,63,0.3);}
+.btn-success:hover{transform:translateY(-1px);}
+.btn-outline{background:#fff;color:var(--texto-sec);border:1.5px solid var(--gris-border);}
+.btn-outline:hover{border-color:var(--azul);color:var(--azul);}
+
+/* DOCENTE BADGE */
+.docente-badge{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--azul-suave);border-radius:var(--radio-sm);border:1px solid #C8DEFA;margin-bottom:1.25rem;}
+.docente-avatar{width:40px;height:40px;border-radius:50%;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+.docente-info{flex:1;}
+.docente-nombre{font-size:14px;font-weight:600;color:var(--azul);}
+.docente-sub{font-size:12px;color:var(--texto-sec);}
+
+/* SUCCESS */
+.success-screen{display:none;text-align:center;padding:3rem 2rem;background:var(--gris-card);border-radius:var(--radio);border:1px solid var(--gris-border);box-shadow:var(--sombra);}
+.success-icon{width:72px;height:72px;background:var(--verde-suave);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:32px;}
+.success-screen h2{font-family:'Playfair Display',serif;font-size:24px;color:var(--verde);margin-bottom:8px;}
+.success-screen p{font-size:14px;color:var(--texto-sec);line-height:1.6;max-width:380px;margin:0 auto 1.5rem;}
+
+/* SECCION COMPLETADA */
+.sec-done-screen{display:none;text-align:center;padding:2.5rem 2rem;background:var(--gris-card);border-radius:var(--radio);border:1px solid var(--gris-border);box-shadow:var(--sombra);}
+.sec-done-screen .check{width:64px;height:64px;background:var(--verde-suave);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:28px;}
+.sec-done-screen h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--verde);margin-bottom:6px;}
+.sec-done-screen p{font-size:13px;color:var(--texto-sec);line-height:1.6;margin-bottom:1.25rem;}
+.next-section-info{background:var(--azul-suave);border-radius:var(--radio-sm);padding:12px 16px;margin-bottom:1.25rem;font-size:13px;color:var(--azul);font-weight:500;}
+
+/* ERROR */
+.error-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#B02A2A;color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(176,42,42,0.35);display:none;z-index:999;white-space:nowrap;}
+
+@media(max-width:500px){
+  .hero h1{font-size:22px;}
+  .select-grid{grid-template-columns:1fr;}
+  .q-text{font-size:12px;}
+  .opt-btn .opt-label{font-size:9px;}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inst">Asociación Nebajense para el Desarrollo Educativo</div>
+  <h1>Evaluación de Desempeño<br>de Estudiantes 2026</h1>
+  <p>Comisión de Educación — Instrumento de evaluación para docentes</p>
+</div>
+
+<div class="progress-wrap" id="progress-wrap" style="display:none;">
+  <div class="progress-card">
+    <div class="progress-info">
+      <span class="progress-label">Progreso de secciones</span>
+      <span class="progress-count" id="prog-count">0 / 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="secciones-dots" id="secciones-dots"></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- PANTALLA 1: INICIO -->
+  <div id="screen-inicio">
+    <div class="inicio-card">
+      <h2>Bienvenido/a</h2>
+      <p>Seleccione su nombre y el grado que desea evaluar. Podrá evaluar todas sus secciones una por una.</p>
+      <div class="select-grid">
+        <div>
+          <label class="field-label">Su nombre completo</label>
+          <div class="input-field" style="padding:0;border:1.5px solid var(--gris-border);border-radius:var(--radio-sm);overflow:hidden;">
+            <input type="text" id="nombre-input" class="input-field" style="border:none;border-radius:0;" placeholder="Escriba su nombre...">
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Grado a evaluar</label>
+          <div class="select-wrap">
+            <select id="grado-select" onchange="onGradoChange()">
+              <option value="">— Seleccione —</option>
+              <option value="4to. PC">4to. PC</option>
+              <option value="5to. PC">5to. PC</option>
+              <option value="6to. PC">6to. PC</option>
+              <option value="4to. Bach. Medicina">4to. Bach. Medicina</option>
+              <option value="5to. Bach. Medicina">5to. Bach. Medicina</option>
+              <option value="4to. Infantil">4to. Infantil</option>
+              <option value="5to. Infantil">5to. Infantil</option>
+              <option value="6to. Infantil">6to. Infantil</option>
+              <option value="4to. Bach. Computación">4to. Bach. Computación</option>
+              <option value="5to. Bach. Computación">5to. Bach. Computación</option>
+              <option value="5to. Bach. Educación">5to. Bach. Educación</option>
+              <option value="5to. Bach. CC. Jurídicas">5to. Bach. CC. Jurídicas</option>
+              <option value="5to. Bach. Administración">5to. Bach. Administración</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="secciones-preview" style="display:none;">
+        <div class="secciones-title">Secciones a evaluar</div>
+        <div id="secciones-list-inicio"></div>
+      </div>
+      <div style="height:1.25rem;"></div>
+      <button class="btn btn-primary" onclick="iniciarEvaluacion()">Comenzar evaluación →</button>
+    </div>
+  </div>
+
+  <!-- PANTALLA 2: FORMULARIO EVALUACION -->
+  <div id="screen-eval" style="display:none;">
+    <div class="docente-badge" id="docente-badge">
+      <div class="docente-avatar" id="docente-avatar">?</div>
+      <div class="docente-info">
+        <div class="docente-nombre" id="docente-nombre-badge">—</div>
+        <div class="docente-sub" id="docente-sub-badge">—</div>
+      </div>
+    </div>
+
+    <div class="eval-card">
+      <div class="eval-header">
+        <h3>Sección 1 — Rendimiento y comportamiento</h3>
+        <p>Seleccione una opción por pregunta: Mucho / Poco / Nada</p>
+      </div>
+      <div class="eval-body" id="s1-body"></div>
+    </div>
+
+    <div class="eval-card">
+      <div class="eval-header">
+        <h3>Sección 2 — Personal administrativo</h3>
+        <p>Seleccione una opción por pregunta: Siempre / A veces / Nunca</p>
+      </div>
+      <div class="eval-body" id="s2-body"></div>
+    </div>
+
+    <div class="comentarios-card">
+      <div class="com-header"><h3>Comentarios adicionales (opcional)</h3></div>
+      <div class="com-body">
+        <label class="field-label" style="margin-bottom:6px;">Observaciones o sugerencias</label>
+        <textarea class="input-field" id="comentarios" placeholder="Escriba aquí sus observaciones..."></textarea>
+        <div style="height:12px;"></div>
+        <label class="field-label" style="margin-bottom:6px;">Área que sugiere para capacitación</label>
+        <textarea class="input-field" id="capacitacion" placeholder="Ej: lectura comprensiva, matemática..."></textarea>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btn-enviar" onclick="enviarSeccion()">Guardar y continuar →</button>
+  </div>
+
+  <!-- PANTALLA 3: SECCION COMPLETADA -->
+  <div id="screen-sec-done" class="sec-done-screen">
+    <div class="check">✓</div>
+    <h2>¡Sección guardada!</h2>
+    <p id="sec-done-msg">La evaluación fue registrada correctamente.</p>
+    <div class="next-section-info" id="next-section-info" style="display:none;"></div>
+    <button class="btn btn-primary" id="btn-siguiente-sec" onclick="siguienteSeccion()" style="display:none;">Evaluar siguiente sección →</button>
+    <button class="btn btn-success" id="btn-terminar" onclick="terminarTodo()" style="display:none;">✓ Terminar evaluación</button>
+  </div>
+
+  <!-- PANTALLA 4: FIN TOTAL -->
+  <div id="screen-fin" class="success-screen">
+    <div class="success-icon">🎓</div>
+    <h2>¡Evaluación completa!</h2>
+    <p id="fin-msg">Todas las secciones han sido evaluadas y guardadas correctamente. Muchas gracias por su tiempo.</p>
+    <button class="btn btn-outline" onclick="reiniciar()">Realizar otra evaluación</button>
+  </div>
+
+</div>
+
+<div class="error-toast" id="error-toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://zoehmyaxgayqckwgltuq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_XjmaBsHXNsdGLvy8M-xgog_alLfj_Gb';
+
+const SECCIONES_GRADO = {
+  '4to. PC': ['A','B','C'],
+  '5to. PC': ['A','B','C'],
+  '6to. PC': ['A','B'],
+  '4to. Bach. Medicina': ['A','B'],
+  '5to. Bach. Medicina': ['Única'],
+  '4to. Infantil': ['Única'],
+  '5to. Infantil': ['Única'],
+  '6to. Infantil': ['Única'],
+  '4to. Bach. Computación': ['Única'],
+  '5to. Bach. Computación': ['Única'],
+  '5to. Bach. Educación': ['Única'],
+  '5to. Bach. CC. Jurídicas': ['Única'],
+  '5to. Bach. Administración': ['Única'],
+};
+
+const S1QS = [
+  'Promedio de alumnos con asistencia al 100%',
+  'Promedio de alumnos que cumplen con tareas al 100%',
+  'Sospecha de consumo de alcohol y estupefacientes',
+  'Cumplimiento de normas generales de reglamento dentro del aula',
+  'Promedio de estudiantes que demuestran respeto hacia el docente'
+];
+const S2QS = [
+  'Dirección toma en cuenta sugerencias del personal',
+  'Sub Dirección resuelve problemas y peticiones del personal',
+  'Secretaria Juana siempre atenta con el personal',
+  'Secretaria Marleny (nueva) siempre atenta con el personal',
+  'Tesorera brinda atención con esmero al personal'
+];
+
+let estado = { nombre:'', grado:'', secciones:[], secIdx:0, completadas:[] };
+
+function onGradoChange() {
+  const g = document.getElementById('grado-select').value;
+  const preview = document.getElementById('secciones-preview');
+  const list = document.getElementById('secciones-list-inicio');
+  if (!g) { preview.style.display='none'; return; }
+  const secs = SECCIONES_GRADO[g] || [];
+  list.innerHTML = secs.map((s,i) => `
+    <div class="sec-item">
+      <div class="sec-item-icon">${i+1}</div>
+      <div class="sec-item-text">Sección ${s === 'Única' ? 'única' : s}</div>
+      <div class="sec-item-badge">Pendiente</div>
+    </div>`).join('');
+  preview.style.display = 'block';
+}
+
+function iniciarEvaluacion() {
+  const nombre = document.getElementById('nombre-input').value.trim();
+  const grado = document.getElementById('grado-select').value;
+  if (!nombre) { showError('Por favor ingrese su nombre.'); return; }
+  if (!grado) { showError('Por favor seleccione un grado.'); return; }
+  estado.nombre = nombre;
+  estado.grado = grado;
+  estado.secciones = SECCIONES_GRADO[grado] || [];
+  estado.secIdx = 0;
+  estado.completadas = [];
+  mostrarProgreso();
+  mostrarFormEval();
+}
+
+function mostrarProgreso() {
+  const wrap = document.getElementById('progress-wrap');
+  wrap.style.display = 'block';
+  actualizarProgreso();
+}
+
+function actualizarProgreso() {
+  const total = estado.secciones.length;
+  const done = estado.completadas.length;
+  document.getElementById('prog-count').textContent = `${done} / ${total}`;
+  document.getElementById('prog-fill').style.width = total > 0 ? `${(done/total)*100}%` : '0%';
+  const dots = document.getElementById('secciones-dots');
+  dots.innerHTML = estado.secciones.map((s,i) => {
+    let cls = i < done ? 'done' : (i === estado.secIdx ? 'active' : '');
+    return `<div class="sec-dot ${cls}" title="Sección ${s}"></div>`;
+  }).join('');
+}
+
+function buildQuestions(containerId, questions, opts, prefix) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  questions.forEach((q, i) => {
+    const row = document.createElement('div');
+    row.className = 'q-row';
+    const optHtml = opts.map(o => `
+      <label class="opt-btn">
+        <input type="radio" name="${prefix}_${i}" value="${o}">
+        <div class="circle"></div>
+        <span class="opt-label">${o}</span>
+      </label>`).join('');
+    row.innerHTML = `<div class="q-num">${i+1}</div><div class="q-text">${q}</div><div class="opts">${optHtml}</div>`;
+    c.appendChild(row);
+  });
+}
+
+function mostrarFormEval() {
+  showScreen('screen-eval');
+  const sec = estado.secciones[estado.secIdx];
+  const secLabel = sec === 'Única' ? estado.grado : `${estado.grado} — Sección ${sec}`;
+  const ini = estado.nombre.split(' ');
+  const iniciales = (ini[0]?.[0]||'') + (ini[1]?.[0]||'');
+  document.getElementById('docente-avatar').textContent = iniciales.toUpperCase() || '?';
+  document.getElementById('docente-nombre-badge').textContent = estado.nombre;
+  document.getElementById('docente-sub-badge').textContent = `Evaluando: ${secLabel}`;
+  document.getElementById('comentarios').value = '';
+  document.getElementById('capacitacion').value = '';
+  buildQuestions('s1-body', S1QS, ['Mucho','Poco','Nada'], 's1');
+  buildQuestions('s2-body', S2QS, ['Siempre','A veces','Nunca'], 's2');
+  actualizarProgreso();
+}
+
+function getVal(prefix, i) {
+  const el = document.querySelector(`input[name="${prefix}_${i}"]:checked`);
+  return el ? el.value : null;
+}
+
+async function enviarSeccion() {
+  const allOk = [...Array(5)].every((_,i) => getVal('s1',i)) && [...Array(5)].every((_,i) => getVal('s2',i));
+  if (!allOk) { showError('Por favor responda todas las preguntas.'); return; }
+
+  const btn = document.getElementById('btn-enviar');
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+
+  const sec = estado.secciones[estado.secIdx];
+  const secLabel = sec === 'Única' ? '' : ` — Sección ${sec}`;
+  const payload = {
+    nombre: estado.nombre,
+    grado: estado.grado + secLabel,
+    s1_q1: getVal('s1',0), s1_q2: getVal('s1',1), s1_q3: getVal('s1',2), s1_q4: getVal('s1',3), s1_q5: getVal('s1',4),
+    s2_q1: getVal('s2',0), s2_q2: getVal('s2',1), s2_q3: getVal('s2',2), s2_q4: getVal('s2',3), s2_q5: getVal('s2',4),
+    comentarios: document.getElementById('comentarios').value.trim(),
+    capacitacion: document.getElementById('capacitacion').value.trim()
+  };
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/respuestas`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error();
+    estado.completadas.push(sec);
+    actualizarProgreso();
+    mostrarSeccionDone();
+  } catch(e) {
+    showError('Error al guardar. Verifique su conexión e intente de nuevo.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Guardar y continuar →';
+  }
+}
+
+function mostrarSeccionDone() {
+  showScreen('screen-sec-done');
+  const sec = estado.secciones[estado.secIdx];
+  const secLabel = sec === 'Única' ? estado.grado : `${estado.grado} Sección ${sec}`;
+  document.getElementById('sec-done-msg').textContent = `La evaluación de ${secLabel} fue registrada correctamente.`;
+  const haySiguiente = estado.secIdx < estado.secciones.length - 1;
+  const nextInfo = document.getElementById('next-section-info');
+  const btnSig = document.getElementById('btn-siguiente-sec');
+  const btnTer = document.getElementById('btn-terminar');
+  if (haySiguiente) {
+    const nextSec = estado.secciones[estado.secIdx + 1];
+    nextInfo.textContent = `Siguiente: ${estado.grado} — Sección ${nextSec}`;
+    nextInfo.style.display = 'block';
+    btnSig.style.display = 'block';
+    btnTer.style.display = 'none';
+  } else {
+    nextInfo.style.display = 'none';
+    btnSig.style.display = 'none';
+    btnTer.style.display = 'block';
+  }
+}
+
+function siguienteSeccion() {
+  estado.secIdx++;
+  mostrarFormEval();
+}
+
+function terminarTodo() {
+  showScreen('screen-fin');
+  document.getElementById('progress-wrap').style.display = 'none';
+  const total = estado.secciones.length;
+  document.getElementById('fin-msg').textContent =
+    `Se evaluaron ${total} sección${total>1?'es':''} del grado ${estado.grado}. Todos los registros han sido guardados correctamente. Muchas gracias, ${estado.nombre}.`;
+}
+
+function reiniciar() {
+  estado = { nombre:'', grado:'', secciones:[], secIdx:0, completadas:[] };
+  document.getElementById('nombre-input').value = '';
+  document.getElementById('grado-select').value = '';
+  document.getElementById('secciones-preview').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  showScreen('screen-inicio');
+}
+
+function showScreen(id) {
+  ['screen-inicio','screen-eval','screen-sec-done','screen-fin'].forEach(s => {
+    document.getElementById(s).style.display = s === id ? 'block' : 'none';
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function showError(msg) {
+  const t = document.getElementById('error-toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display='none', 3500);
+}
+</script>
+</body>
+</html>
